@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ventaId" language="groovy" pageWidth="221" pageHeight="842" columnWidth="181" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="efectivo" class="java.lang.String"/>
+	<parameter name="cambio" class="java.lang.String"/>
+	<field name="id_folio" class="java.lang.String"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="cve_cliente" class="java.lang.String"/>
+	<field name="id_usuario" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="id_product" class="java.lang.String"/>
+	<field name="product" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="p_venta" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="subtotal" class="java.lang.Double"/>
+	<field name="totCantidad" class="java.lang.String"/>
+	<field name="total" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
+	</variable>
+	<variable name="totalCantidad" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<group name="gFolio">
+		<groupExpression><![CDATA[$F{id_folio}]]></groupExpression>
+		<groupHeader>
+			<band height="11">
+				<textField>
+					<reportElement x="2" y="0" width="109" height="11" forecolor="#006666"/>
+					<textElement>
+						<font size="6" isBold="false" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Atendio: "  + $F{usuario}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="121" y="0" width="60" height="11"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="2" y="10" width="176" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<textField>
+					<reportElement x="121" y="2" width="55" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="2" width="18" height="11"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{totCantidad}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="52" width="176" height="1" forecolor="#FF3333"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement x="18" y="13" width="136" height="30"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="0" width="181" height="13" forecolor="#009999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Abarrotes Rossy"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="11" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="103" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Articulo / Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="0" width="19" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="121" y="0" width="33" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="153" y="0" width="25" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subt]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="10" width="177" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField>
+				<reportElement x="18" y="0" width="108" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product} + " " + $F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="18" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="0" width="25" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{p_venta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="27" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="95">
+			<line>
+				<reportElement x="0" y="1" width="178" height="1"/>
+			</line>
+			<frame>
+				<reportElement mode="Transparent" x="2" y="1" width="179" height="91" forecolor="#000000"/>
+				<textField pattern="###0.00;###0.00-">
+					<reportElement x="81" y="2" width="95" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tot de Vta: " + $V{total}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement x="2" y="38" width="172" height="25"/>
+					<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="3of9" drawText="true" checksumRequired="false">
+						<jr:codeExpression><![CDATA[$F{id_folio}]]></jr:codeExpression>
+					</jr:barbecue>
+				</componentElement>
+				<textField>
+					<reportElement x="81" y="12" width="95" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Efectivo: " +$P{efectivo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="81" y="22" width="95" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cambio: " + $P{cambio}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="2" y="68" width="172" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA["GRACIAS POR SU COMPRA"]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</summary>
+</jasperReport>
