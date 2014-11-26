@@ -211,7 +211,7 @@ public class VentaDAO {
                 + "sum(B.SUBTOTAL) SUBTOTAL, "
                 + "A.CANTIDAD totCantidad, "
                 + "A.TOTAL      "
-                + "from vt.ventas a, vt.venta_detalle b, vt.product c, vt.vt_usuarios d  "
+                + "from ventas a, venta_detalle b, product c, vt_usuarios d  "
                 + "where a.id_folio = b.venta_id_folio     "
                 + "and C.ID_PRODUCT = B.ID_PRODUCT     "
                 + "and A.USUARIO_ID_USUARIO = D.ID_USUARIO  "

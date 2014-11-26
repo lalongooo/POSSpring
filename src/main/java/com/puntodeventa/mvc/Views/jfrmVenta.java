@@ -129,6 +129,17 @@ public class jfrmVenta extends javax.swing.JFrame {
         txt.getActionMap().put("searchProduct", searchProduct);
         txt.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keySearch, "searchProduct");
 
+        //Adding Menu shortcut Ctrl + P
+        KeyStroke keyDoPayment = KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK);
+        Action doPayment = new AbstractAction("Pay") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doPayment();
+            }
+        };
+        txt.getActionMap().put("doPayment", doPayment);
+        txt.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyDoPayment, "doPayment");
+        
     }
 
     private void setTags() {
@@ -379,11 +390,11 @@ public class jfrmVenta extends javax.swing.JFrame {
 
     private void txtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKeyTyped
         try {
-            if (evt.isControlDown()) {
-                return;
-            }
+//            if (evt.isControlDown()) {
+//                return;
+//            }
 
-            if (evt.isAltDown()) {
+            if (evt.isControlDown()) {
 
                 switch (evt.getKeyChar()) {
 
@@ -530,6 +541,25 @@ public class jfrmVenta extends javax.swing.JFrame {
         searchProducts.setVisible(true);
     }
 
+    private void doPayment() {
+
+        if (this.jtblVenta.getRowCount() > 0) {
+            if (Util.isValidCashValue(txt.getText())) {
+                if (Util.isCashExceeded(txt.getText())) {
+                    if (isCorrectAmount()) {
+                        this.finishOrder();
+                    } else {
+                        valid.msjInfo(this, TagHelper.getTag("jfrmVenta.insufficientAmount"));
+                    }
+                } else {
+                    valid.msjInfo(this, TagHelper.getTag("jfrmVenta.cashExceeded"));
+                }
+            } else {
+                valid.msjInfo(this, TagHelper.getTag("jfrmVenta.emptyOrInvalidCash"));
+            }
+        }
+    }
+    
     private double getTotalFromTable() {
 
         int rows = this.jtblVenta.getRowCount();

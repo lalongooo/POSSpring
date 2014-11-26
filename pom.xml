@@ -23,6 +23,15 @@
     <name>POSSpring</name>
     
     <dependencies>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>4.0.8.RELEASE</version>
+            <type>jar</type>
+        </dependency>
+
+        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
