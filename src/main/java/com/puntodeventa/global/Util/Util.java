@@ -163,8 +163,7 @@ public class Util {
      * @return La fecha actual en el sistema.
      */
     public static Date getDate() {
-        java.util.Date date = new java.util.Date();
-        return date;
+        return new java.util.Date();
     }
 
     public static Timestamp getDate_() {
@@ -176,12 +175,14 @@ public class Util {
     /**
      * Determina si se agregarán productos con el símbolo de multiplicación
      *
-     * @return La fecha actual en el sistema.
+     * @param command The value captured in the main text field
+     * @return La fecha actual en el sistem 
      */
-    public static boolean isMultiplicationCommand(String value) {
+    
+    public static boolean isMultiplicationCommand(String command) {
         boolean returnValue = false;
         try {
-            String values[] = value.split(Command.MULTIPLICATION_REGEX);
+            String values[] = command.split(Command.MULTIPLICATION_REGEX);
 
             if (values.length == 2) {
                 Long.parseLong(values[0]);

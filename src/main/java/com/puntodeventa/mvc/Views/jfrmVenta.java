@@ -31,8 +31,6 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import org.icepdf.core.exceptions.PDFSecurityException;
-import org.springframework.http.HttpMethod;
 
 /**
  *
@@ -588,28 +586,31 @@ public class jfrmVenta extends javax.swing.JFrame {
 
     }
 
-    private void finishOrder() {        
-        Venta venta;
+    private void finishOrder() {
+        
+        VentaLogic vtaLogic = new VentaLogic();
+        Venta venta = new Venta();;
+        VentaDetalle vd = null;
         int cantidad = 0;
+        int ticketNumber = 0;
         double total = 0;
         double efectivo = 0;
         double cambio = 0;
-
+        
         try {
 
             cantidad = this.jtblVenta.getRowCount();
-            total = Util.formatMoneyToDouble(this.jlblTotal.getText().replace("$", ""));            
-            efectivo = Double.valueOf(this.txt.getText());
+            total = Util.formatMoneyToDouble(jlblTotal.getText().replace("$", ""));            
+            efectivo = Double.valueOf(txt.getText());
             cambio = efectivo - total;
             
-            this.jlblEfectivo.setText(Util.formatDoubleValueToMoney(efectivo));            
-            this.jlblCambio.setText(Util.formatDoubleValueToMoney(cambio));
+            jlblEfectivo.setText(Util.formatDoubleValueToMoney(efectivo));            
+            jlblCambio.setText(Util.formatDoubleValueToMoney(cambio));
 
         } catch (NumberFormatException nfe) {
             objLog.Log(nfe.getMessage());
         }
-
-        venta = new Venta();
+        
         venta.setFecha(Util.getDate());
         venta.setIdUsuario(Util.getCurrentUser());
         venta.setTotal(total);   
@@ -617,21 +618,16 @@ public class jfrmVenta extends javax.swing.JFrame {
         venta.setCveCliente(1);
         venta.setEfectivo(efectivo);
         venta.setCambio(cambio);
-        venta.setCantidad(cantidad);
-
-        VentaLogic vtaLogic = new VentaLogic();
-
-        int ticketNumber = 0;
-        boolean allCorrect = false;
+        venta.setCantidad(cantidad);        
 
         try {
             ticketNumber = vtaLogic.saveVenta(venta);
-            allCorrect = saveOrderDetail(venta);
+            vd = saveOrderDetail(venta);
         } catch (Exception e) {
             objLog.Log(e.getMessage());
         }
 
-        if (allCorrect) {
+        if (vd != null) {
             try {
 
                 restartControls();
@@ -644,7 +640,7 @@ public class jfrmVenta extends javax.swing.JFrame {
                     } else {
                         POSPrintService.printTicket(null);
                     }
-                    com.xihuani.posspring.restclient.TyketClient.sendRequest();
+                    
                 } else {
                     POSPrintService.printTicket(venta);
                 }
@@ -658,9 +654,8 @@ public class jfrmVenta extends javax.swing.JFrame {
         }
     }
 
-    private boolean saveOrderDetail(Venta venta) {
-        boolean returnValue = false;
-        VentaDetalle vd;
+    private VentaDetalle saveOrderDetail(Venta venta) {
+        VentaDetalle vd = null;
         int items = this.jtblVenta.getRowCount();
         try {
             for (int i = 0; i < items; i++) {
@@ -677,19 +672,20 @@ public class jfrmVenta extends javax.swing.JFrame {
                 try {
                     VentadDetalleLogic vdLogic = new VentadDetalleLogic();
                     vdLogic.saveVentaDetalle(vd);
-                    returnValue = true;
+                    return null;
                 } catch (Exception e) {
-                    returnValue = false;
                     objLog.Log("Error while saving OrderDetail. " + e.getMessage());
+                    return null;
                 }
             }
         } catch (NumberFormatException nfe) {
             objLog.Log(nfe.getMessage());
+            return null;
         } catch (UnsupportedOperationException | ClassCastException | NullPointerException | IllegalArgumentException nfe) {
             objLog.Log(nfe.getMessage());
+            return null;
         }
-
-        return returnValue;
+        return vd;
     }
 
     public void restartControls() {
