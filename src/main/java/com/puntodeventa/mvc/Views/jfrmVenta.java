@@ -1,9 +1,6 @@
 package com.puntodeventa.mvc.Views;
 
-import com.puntodeventa.global.Entity.Product;
-import com.puntodeventa.global.Entity.Usuario;
-import com.puntodeventa.global.Entity.Venta;
-import com.puntodeventa.global.Entity.VentaDetalle;
+import com.puntodeventa.global.Entity.*;
 import com.puntodeventa.global.Util.Constants.Command;
 import com.puntodeventa.global.Util.Constants.ShortCuts;
 import com.puntodeventa.global.Util.Constants.TableColumns;
@@ -17,7 +14,10 @@ import com.puntodeventa.global.printservice.POSPrintService;
 import com.puntodeventa.mvc.Controller.VentaLogic;
 import com.puntodeventa.mvc.Controller.VentadDetalleLogic;
 import com.puntodeventa.services.DAO.ProductDAO;
-
+import com.tyket.model.Article;
+import com.tyket.model.Ticket;
+import com.tyket.model.TyketRestClient;
+import com.tyket.model.User;
 import java.awt.Color;
 import java.awt.Event;
 import java.awt.Image;
@@ -25,12 +25,15 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import org.springframework.http.HttpMethod;
 
 /**
  *
@@ -588,9 +591,9 @@ public class jfrmVenta extends javax.swing.JFrame {
 
     private void finishOrder() {
         
-        VentaLogic vtaLogic = new VentaLogic();
+        VentaLogic vtaLogic = new VentaLogic();        
+        List<VentaDetalle> vdList = new ArrayList<>();
         Venta venta = new Venta();;
-        VentaDetalle vd = null;
         int cantidad = 0;
         int ticketNumber = 0;
         double total = 0;
@@ -622,12 +625,12 @@ public class jfrmVenta extends javax.swing.JFrame {
 
         try {
             ticketNumber = vtaLogic.saveVenta(venta);
-            vd = saveOrderDetail(venta);
+            vdList = saveOrderDetail(venta);
         } catch (Exception e) {
             objLog.Log(e.getMessage());
         }
 
-        if (vd != null) {
+        if (!vdList.isEmpty()) {
             try {
 
                 restartControls();
@@ -640,7 +643,7 @@ public class jfrmVenta extends javax.swing.JFrame {
                     } else {
                         POSPrintService.printTicket(null);
                     }
-                    
+                    sendTyketPostRequest(vdList);
                 } else {
                     POSPrintService.printTicket(venta);
                 }
@@ -654,8 +657,8 @@ public class jfrmVenta extends javax.swing.JFrame {
         }
     }
 
-    private VentaDetalle saveOrderDetail(Venta venta) {
-        VentaDetalle vd = null;
+    private List<VentaDetalle> saveOrderDetail(Venta venta) {
+        List<VentaDetalle> vdList = new ArrayList<>();
         int items = this.jtblVenta.getRowCount();
         try {
             for (int i = 0; i < items; i++) {
@@ -663,7 +666,7 @@ public class jfrmVenta extends javax.swing.JFrame {
                 int cantidad = Integer.parseInt(this.jtblVenta.getValueAt(i, 2).toString());
                 double subTotal = Double.valueOf(this.jtblVenta.getValueAt(i, 4).toString());
 
-                vd = new VentaDetalle();
+                VentaDetalle vd = new VentaDetalle();
                 vd.setVenta(venta);
                 vd.setProductCode(productCode);
                 vd.setCantidad(cantidad);
@@ -672,7 +675,7 @@ public class jfrmVenta extends javax.swing.JFrame {
                 try {
                     VentadDetalleLogic vdLogic = new VentadDetalleLogic();
                     vdLogic.saveVentaDetalle(vd);
-                    return null;
+                    vdList.add(vd);
                 } catch (Exception e) {
                     objLog.Log("Error while saving OrderDetail. " + e.getMessage());
                     return null;
@@ -685,7 +688,7 @@ public class jfrmVenta extends javax.swing.JFrame {
             objLog.Log(nfe.getMessage());
             return null;
         }
-        return vd;
+        return vdList;
     }
 
     public void restartControls() {
@@ -701,6 +704,48 @@ public class jfrmVenta extends javax.swing.JFrame {
             this.jlblEfectivo.setText(TagHelper.getTag("jfrmVenta.jlblEfectivo"));
             this.jlblCambio.setText(TagHelper.getTag("jfrmVenta.jlblCambio"));
         }
+    }
+    
+    private void sendTyketPostRequest(List<VentaDetalle> detail){
+        
+        if(!detail.isEmpty()){
+            
+            TyketRestClient restClient = new TyketRestClient();
+            
+            // Create USER
+            Venta v = detail.get(0).getVenta();
+            User u = new User();
+            u.setUsername(v.getIdUsuario().getNombre());
+            restClient.sendRequest(HttpMethod.POST, u, u.getClass());
+            
+            // Crete Ticket
+            Ticket ticket = new Ticket();
+            ticket.setDate(Util.getDate());
+            ticket.setUser(u);
+            restClient.sendRequest(HttpMethod.POST, ticket, ticket.getClass());
+            
+            for (VentaDetalle vd : detail) {
+                
+                Product product = prodDao.selectProduct(vd.getProductCode());               
+                
+                Article article = new Article();
+                article.setName(product.getDescripcion());
+                article.setPrice(product.getP_venta());
+                article.setAmount(vd.getCantidad());
+                article.setTicket(ticket);
+                restClient.sendRequest(HttpMethod.POST, article, article.getClass());
+            }
+        }
+        
+        
+        
+
+        
+
+        
+        
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
