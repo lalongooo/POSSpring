@@ -240,6 +240,8 @@ public class VentaDAO {
     }
 
     private List<VentaProduct> getRecordVentaProduct(List list) {
+        
+        double d = Double.parseDouble("2.0");
         List<VentaProduct> nlist = new ArrayList<VentaProduct>();
         for (int i = 0; i < list.size(); i++) {
             Object[] item = (Object[]) list.get(i);
@@ -254,7 +256,7 @@ public class VentaDAO {
             v.setP_venta(Double.parseDouble(item[7].toString()));
             v.setCantidad(Integer.parseInt(item[8].toString()));
             v.setSubtotal(Double.parseDouble(item[9].toString()));
-            v.setTotCantidad(Integer.parseInt(item[10].toString()));
+            v.setTotCantidad(new Double(item[10].toString()).intValue());
             v.setTotal(Double.parseDouble(item[11].toString()));
             nlist.add(v);
         }

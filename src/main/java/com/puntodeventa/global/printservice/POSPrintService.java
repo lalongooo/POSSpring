@@ -112,7 +112,7 @@ public class POSPrintService {
         }
     }
 
-    public static void printTicket(Venta venta) throws PDFSecurityException {
+    public static void printTicket(Venta venta){
         
         ReportGenerator repGenerator = new ReportGenerator();
         byte[] pdfBuffer = null;
@@ -144,6 +144,8 @@ public class POSPrintService {
             System.out.println("3: " + ex.getMessage());
         } catch (IOException ex) {
             System.out.println("4: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("5: " + ex.getMessage());
         }
     }
 

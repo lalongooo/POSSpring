@@ -32,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import org.icepdf.core.exceptions.PDFSecurityException;
+import org.springframework.http.HttpMethod;
 
 /**
  *
@@ -643,11 +644,12 @@ public class jfrmVenta extends javax.swing.JFrame {
                     } else {
                         POSPrintService.printTicket(null);
                     }
+                    com.xihuani.posspring.restclient.TyketClient.sendRequest();
                 } else {
                     POSPrintService.printTicket(venta);
                 }
 
-            } catch (PDFSecurityException e) {
+            } catch (Exception e) {
                 objLog.Log("Possible cause: Error while printing. " + e.getMessage());
             }
 

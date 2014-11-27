@@ -101,7 +101,7 @@ public class jfrmVentaMenuPrintTicket extends javax.swing.JDialog {
                     try {
                         Venta v = vl.getVenta(Integer.parseInt(ticketNumber));
                         POSPrintService.printTicket(v);
-                    } catch (PDFSecurityException ex) {
+                    } catch (NumberFormatException ex) {
                         objLog.Log(ex.getMessage());
                     }
                 }
