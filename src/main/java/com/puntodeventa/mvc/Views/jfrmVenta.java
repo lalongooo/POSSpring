@@ -16,7 +16,7 @@ import com.puntodeventa.mvc.Controller.VentadDetalleLogic;
 import com.puntodeventa.services.DAO.ProductDAO;
 import com.tyket.model.Article;
 import com.tyket.model.Ticket;
-import com.tyket.model.TyketRestClient;
+import com.tyket.rest.client.TyketRestClient;
 import com.tyket.model.User;
 import java.awt.Color;
 import java.awt.Event;
@@ -735,17 +735,7 @@ public class jfrmVenta extends javax.swing.JFrame {
                 article.setTicket(ticket);
                 restClient.sendRequest(HttpMethod.POST, article, article.getClass());
             }
-        }
-        
-        
-        
-
-        
-
-        
-        
-        
-        
+        }        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
