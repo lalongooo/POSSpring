@@ -31,16 +31,16 @@ public class LogHelper {
             bw.newLine();
             bw.write("Class name: " + this.className);
             bw.newLine();
-            bw.write("Stacktrace : " + stackMsg);
-            bw.newLine();
-            
-            for (StackTraceElement elm : stack) {
-                stackMsg += elm.getFileName() + " --  ";
-                stackMsg += elm.getClassName() + " --  "; 
-                stackMsg += elm.getMethodName();
-                bw.write(stackMsg);
-                bw.newLine();
-            }
+//            bw.write("Stacktrace : " + stackMsg);
+//            bw.newLine();
+//            
+//            for (StackTraceElement elm : stack) {
+//                stackMsg += elm.getFileName() + " --  ";
+//                stackMsg += elm.getClassName() + " --  "; 
+//                stackMsg += elm.getMethodName();
+//                bw.write(stackMsg);
+//                bw.newLine();
+//            }
             
             bw.write("Message: " + message);
             bw.newLine();
