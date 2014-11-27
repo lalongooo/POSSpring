@@ -1,8 +1,6 @@
 package com.puntodeventa.services.DAO;
 
-import com.puntodeventa.global.Entity.Sesion;
 import com.puntodeventa.global.Entity.Usuario;
-import com.puntodeventa.global.Entity.Venta;
 import com.puntodeventa.global.Util.LogHelper;
 import com.puntodeventa.global.Util.ValidacionForms;
 import java.util.List;
@@ -10,7 +8,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
