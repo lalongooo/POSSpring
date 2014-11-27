@@ -4,7 +4,6 @@
  */
 package com.puntodeventa.mvc.Controller;
 
-import com.puntodeventa.global.Entity.Sesion;
 import com.puntodeventa.global.Entity.Usuario;
 import com.puntodeventa.global.Util.LogHelper;
 import com.puntodeventa.services.DAO.UsuarioDAO;
